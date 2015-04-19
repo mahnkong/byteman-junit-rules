@@ -1,0 +1,138 @@
+package org.mahnkong.testutils.byteman;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+
+/**
+ * Created by mahnkong on 19.04.15.
+ */
+public class BytemanAgentInstallerTest {
+
+    @Mock
+    Runtime runtime;
+
+    @InjectMocks
+    private BytemanAgentInstaller bytemanAgentInstaller = new BytemanAgentInstaller.Builder().build();
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationTransformAllActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().transformAll(true).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString("-Dorg.jboss.byteman.transform.all"));
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationTransformAllNotActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().transformAll(false).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), not(containsString("-Dorg.jboss.byteman.transform.all")));
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationBytemanHome() throws Throwable {
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().bytemanHome("/test/bytemanhome").build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString("/test/bytemanhome/bin/bminstall"));
+    }
+
+    @Test
+    public void testStatementExecutionAfterAgentInstallExecutionOK() throws Throwable {
+        Process mockProcess = mock(Process.class);
+        when(mockProcess.waitFor()).thenReturn(0);
+        when(mockProcess.exitValue()).thenReturn(0);
+        when(runtime.exec(anyString())).thenReturn(mockProcess);
+
+        final List<String> list = new ArrayList();
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                list.add("test");
+            }
+        };
+        Description description = mock(Description.class);
+
+        bytemanAgentInstaller.apply(statement, description).evaluate();
+        assertEquals(1, list.size());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testStatementExecutionNotDoneAfterAgentInstallExecutionNOK() throws Throwable {
+        Process mockProcess = mock(Process.class);
+        when(mockProcess.waitFor()).thenReturn(1);
+        when(mockProcess.exitValue()).thenReturn(1);
+        when(runtime.exec(anyString())).thenReturn(mockProcess);
+
+        final List<String> list = new ArrayList();
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+                list.add("test");
+            }
+        };
+        Description description = mock(Description.class);
+
+        bytemanAgentInstaller.apply(statement, description).evaluate();
+        fail("should not have reached here!");
+    }
+
+
+
+}

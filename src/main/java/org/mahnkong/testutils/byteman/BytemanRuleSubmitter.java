@@ -66,7 +66,7 @@ public class BytemanRuleSubmitter extends AbstractBytemanTestRule {
 
 
         public Builder() {
-            this.bytemanHome = System.getProperty(AbstractBytemanTestRule.BYTEMAN_HOME_SYSTEM_PROPERTY);
+            this.bytemanHome = System.getenv("BYTEMAN_HOME");
         }
 
         public Builder bytemanHome(final String bytemanHome) {

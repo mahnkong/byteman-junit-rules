@@ -12,17 +12,20 @@ import java.lang.management.RuntimeMXBean;
 public class BytemanAgentInstaller extends AbstractBytemanTestRule {
 
     private boolean verbose;
+    private boolean transformAll;
+    private RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
 
-    private BytemanAgentInstaller(String bytemanHome, boolean verbose) {
+
+    private BytemanAgentInstaller(String bytemanHome, boolean verbose, boolean transformAll) {
         super(bytemanHome);
         this.verbose = verbose;
+        this.transformAll = transformAll;
     }
 
     private void installAgent() throws Exception {
-        RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
         String jvmName = bean.getName();
         long pid = Long.valueOf(jvmName.split("@")[0]);
-        execute(bminstall + " " + pid, verbose);
+        execute(bminstall + (transformAll ? " -Dorg.jboss.byteman.transform.all" : "") +  " -Dorg.jboss.byteman.home=" + getBytemanHome() + " " + pid, verbose);
     }
 
     @Override
@@ -43,14 +46,21 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
     public static class Builder {
         private String bytemanHome;
         private boolean verbose;
+        private boolean transformAll;
 
         public Builder() {
-            this.bytemanHome = System.getProperty(AbstractBytemanTestRule.BYTEMAN_HOME_SYSTEM_PROPERTY);
+            this.bytemanHome = System.getenv("BYTEMAN_HOME");
             this.verbose = false;
+            this.transformAll = false;
         }
 
         public Builder bytemanHome(final String bytemanHome) {
             this.bytemanHome = bytemanHome;
+            return this;
+        }
+
+        public Builder transformAll(final boolean transformAll) {
+            this.transformAll = transformAll;
             return this;
         }
 
@@ -60,7 +70,7 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
         }
 
         public BytemanAgentInstaller build() {
-            return new BytemanAgentInstaller(bytemanHome, verbose);
+            return new BytemanAgentInstaller(bytemanHome, verbose, transformAll);
         }
     }
 }

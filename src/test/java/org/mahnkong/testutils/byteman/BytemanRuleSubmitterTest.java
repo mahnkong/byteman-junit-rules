@@ -68,7 +68,7 @@ public class BytemanRuleSubmitterTest {
     }
 
     @Test
-    public void testStatementExecutionBytemanRuleClassAndFileMethodAnnotation() throws Throwable {
+    public void testStatementExecutionBytemanRuleFileClassAndMethodAnnotation() throws Throwable {
         doNothing().when(bytemanRuleSubmitter).execute(anyString(), anyBoolean());
 
         BytemanRuleFile bytemanRuleFile = mock(BytemanRuleFile.class);
@@ -100,7 +100,7 @@ public class BytemanRuleSubmitterTest {
     }
 
     @Test
-    public void testStatementExecutionBytemanRuleClassAndFileMethodAnnotationIgnoreClass() throws Throwable {
+    public void testStatementExecutionBytemanRuleFileClassAndMethodAnnotationIgnoreClass() throws Throwable {
         doNothing().when(bytemanRuleSubmitter).execute(anyString(), anyBoolean());
 
         BytemanRuleFile bytemanRuleFile = mock(BytemanRuleFile.class);

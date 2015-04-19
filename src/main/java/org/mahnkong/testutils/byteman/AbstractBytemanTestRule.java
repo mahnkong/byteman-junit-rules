@@ -10,18 +10,16 @@ import java.io.InputStreamReader;
  * Created by mahnkong on 19.04.15.
  */
 public abstract class AbstractBytemanTestRule implements TestRule {
-    public static String BYTEMAN_HOME_SYSTEM_PROPERTY = "byteman.home";
-
     private String bytemanHome;
+    private Runtime runtime = Runtime.getRuntime();
 
     private boolean isWindows = false;
     protected String bmsubmit = "";
     protected String bminstall = "";
 
     public AbstractBytemanTestRule(String bytemanHome) {
-        if (bytemanHome != null && !bytemanHome.equals("")) {
-            this.bytemanHome = bytemanHome;
-        }
+        this.bytemanHome = bytemanHome;
+
         if (System.getProperty ("os.name").toLowerCase().contains("windows")) {
             isWindows = true;
         }
@@ -33,7 +31,7 @@ public abstract class AbstractBytemanTestRule implements TestRule {
     }
 
     protected void execute(String command, boolean verbose) throws Exception {
-        Process p = Runtime.getRuntime().exec(command);
+        Process p = runtime.exec(command);
         p.waitFor();
 
         if (verbose) {
@@ -49,5 +47,9 @@ public abstract class AbstractBytemanTestRule implements TestRule {
         if (p.exitValue() != 0) {
             throw new IllegalStateException("Execution of command '" + command + "' failed with exit code '" + p.exitValue() + "'");
         }
+    }
+
+    public String getBytemanHome() {
+        return bytemanHome;
     }
 }

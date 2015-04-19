@@ -10,8 +10,8 @@ import java.io.File;
  */
 public class BytemanRuleSubmitter extends AbstractBytemanTestRule {
 
-    private BytemanRuleSubmitter(String bytemanHome) {
-        super(bytemanHome);
+    private BytemanRuleSubmitter(Builder builder) {
+        super(builder.bytemanHome);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class BytemanRuleSubmitter extends AbstractBytemanTestRule {
         }
 
         public BytemanRuleSubmitter build() {
-            return new BytemanRuleSubmitter(bytemanHome);
+            return new BytemanRuleSubmitter(this);
         }
     }
 }

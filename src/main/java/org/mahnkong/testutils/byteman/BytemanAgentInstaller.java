@@ -16,10 +16,10 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
     private RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
 
 
-    private BytemanAgentInstaller(String bytemanHome, boolean verbose, boolean transformAll) {
-        super(bytemanHome);
-        this.verbose = verbose;
-        this.transformAll = transformAll;
+    private BytemanAgentInstaller(Builder builder) {
+        super(builder.bytemanHome);
+        this.verbose = builder.verbose;
+        this.transformAll = builder.transformAll;
     }
 
     private void installAgent() throws Exception {
@@ -70,7 +70,7 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
         }
 
         public BytemanAgentInstaller build() {
-            return new BytemanAgentInstaller(bytemanHome, verbose, transformAll);
+            return new BytemanAgentInstaller(this);
         }
     }
 }

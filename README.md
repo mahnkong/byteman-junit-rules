@@ -55,7 +55,7 @@ This annotation can be applied to classes and methods and specifies the rules to
 * filepath: mandatory, specifies where to find the rule file (can be relative to the project directory)
 * verbose: optional, if active all byteman gets executed in verbose mode
 
-Rules configured on class level are loaded before **each** test and unloaded afterwards. Rules configured on method level are loaded only before the test they are annotated to and onloaded after test execution. If the test class and the test method are both annotated with BytemanRuleFile, first the class rules are loaded and afterwards the method rules. Then again the test gets executed and afterwards the method rules are unloaded before the class rules. 
+Rules configured on class level are loaded before **each** test and unloaded afterwards. Rules configured on method level are loaded only before the test they are annotated to and unloaded after test execution. If the test class and the test method are both annotated with BytemanRuleFile, first the class rules are loaded and afterwards the method rules. Then again the test gets executed and afterwards the method rules are unloaded before the class rules. 
 
 Example definition inside a test case (the rules here are stored inside *src/test/resources* and therefore get copied to *target/test-classes*:
 

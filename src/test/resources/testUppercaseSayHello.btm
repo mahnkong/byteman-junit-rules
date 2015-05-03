@@ -1,0 +1,7 @@
+RULE trace sayHello entry
+CLASS org.mahnkong.testutils.byteman.it.SimpleBean
+METHOD java.lang.String sayHello()
+AT EXIT
+IF true
+DO return $!.toUpperCase()
+ENDRULE

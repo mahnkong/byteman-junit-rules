@@ -14,7 +14,6 @@ public class BytemanRuleSubmitter extends AbstractBytemanTestRule {
         super(builder.bytemanHome);
     }
 
-    @Override
     public Statement apply(Statement base, Description description) {
         BytemanRuleFile bytemanRuleFileClassAnnotation = description.getTestClass().getAnnotation(BytemanRuleFile.class);
         BytemanRuleFile bytemanRuleFileMethodAnnotation = description.getAnnotation(BytemanRuleFile.class);

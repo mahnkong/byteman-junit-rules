@@ -28,7 +28,6 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
         execute(bminstall + (transformAll ? " -Dorg.jboss.byteman.transform.all" : "") +  " -Dorg.jboss.byteman.home=" + getBytemanHome() + " " + pid, verbose);
     }
 
-    @Override
     public Statement apply(final Statement statement, Description description) {
         return new Statement() {
             @Override

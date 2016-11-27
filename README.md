@@ -1,3 +1,4 @@
+![Travis build status](https://api.travis-ci.org/mahnkong/byteman-junit-rules.svg?branch=develop)
 # byteman-test-utils
 
 This project contains functionality allowing the usage of [byteman](http://byteman.jboss.org/) in JUnit tests by providing [JUnit](http://junit.org/) rules (install byteman agent, load/unload of the rules) and some annotations (byteman setup for the tests). Byteman can also be used in JUnit tests by using the BMUnitRunner class provided by byteman, but this will prevent the usage of other runners (i.e. the [Arquillian](http://arquillian.org/) runner)

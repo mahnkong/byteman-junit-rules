@@ -1,3 +1,7 @@
-byteman-test-utils.iml
-target/
+.gradle
+build.gradle.orig
+build
+*.iml
+*.un~
+*.swp
 .idea

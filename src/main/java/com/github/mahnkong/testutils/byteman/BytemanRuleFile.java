@@ -1,4 +1,4 @@
-package org.mahnkong.testutils.byteman;
+package com.github.mahnkong.testutils.byteman;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

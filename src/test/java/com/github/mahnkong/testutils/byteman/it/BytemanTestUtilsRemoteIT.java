@@ -1,4 +1,4 @@
-package org.mahnkong.testutils.byteman.it;
+package com.github.mahnkong.testutils.byteman.it;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -7,8 +7,8 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mahnkong.testutils.byteman.BytemanRuleFile;
-import org.mahnkong.testutils.byteman.BytemanRuleSubmitter;
+import com.github.mahnkong.testutils.byteman.BytemanRuleFile;
+import com.github.mahnkong.testutils.byteman.BytemanRuleSubmitter;
 
 import javax.ejb.EJB;
 
@@ -39,7 +39,7 @@ public class BytemanTestUtilsRemoteIT {
     }
 
     @Test
-    @BytemanRuleFile(filepath = "target/test-classes/testSayHello.btm")
+    @BytemanRuleFile(filepath = "build/resources/test/testSayHello.btm")
     public void testSayHelloByteman() {
         assertEquals("Moin!", simpleBean.sayHello());
     }

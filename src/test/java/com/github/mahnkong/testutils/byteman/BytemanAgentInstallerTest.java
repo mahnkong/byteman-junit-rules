@@ -1,4 +1,4 @@
-package org.mahnkong.testutils.byteman;
+package com.github.mahnkong.testutils.byteman;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class BytemanAgentInstallerTest {
 
     @Test
     public void testAgentInstallCommandCreationBytemanHome() throws Throwable {
-        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().bytemanHome("/test/bytemanhome").build());
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().bytemanHome("/test_bytemanhome").build());
         doNothing().when(b1).execute(anyString(), anyBoolean());
 
         Statement statement = new Statement() {
@@ -88,7 +89,7 @@ public class BytemanAgentInstallerTest {
 
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
         verify(b1).execute(argument.capture(), anyBoolean());
-        assertThat(argument.getValue(), containsString("/test/bytemanhome/bin/bminstall"));
+        assertThat(argument.getValue(), containsString("/test_bytemanhome" + File.separator + "bin" + File.separator + "bminstall"));
     }
 
     @Test

@@ -1,5 +1,5 @@
 RULE trace sayHello entry
-CLASS org.mahnkong.testutils.byteman.it.SimpleBean
+CLASS SimpleBean
 METHOD java.lang.String sayHello()
 AT EXIT
 IF true

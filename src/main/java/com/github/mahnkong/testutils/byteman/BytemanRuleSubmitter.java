@@ -1,4 +1,4 @@
-package org.mahnkong.testutils.byteman;
+package com.github.mahnkong.testutils.byteman;
 
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;

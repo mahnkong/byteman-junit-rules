@@ -4,16 +4,13 @@
 
     <defaultProtocol type="Servlet 3.0"/>
 
-    <engine>
-        <property name="deploymentExportPath">target/deployments</property>
-    </engine>
-
     <container qualifier="jboss" default="true">
         <configuration>
-            <property name="jbossHome">target/wildfly-8.2.0.Final</property>
+            <property name="jbossHome">build/wildfly-10.1.0.Final</property>
             <property name="javaVmArguments">
-                -Dbyteman.home=${env.BYTEMAN_HOME} -Dorg.jboss.byteman.transform.all -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true -Dorg.jboss.byteman.verbose=true -javaagent:${env.BYTEMAN_HOME}/lib/byteman.jar=listener:true,boot:${env.BYTEMAN_HOME}/lib/byteman.jar
+                -Djboss.socket.binding.port-offset=1000 -Dbyteman.home=${env.BYTEMAN_HOME} -Dorg.jboss.byteman.transform.all -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true -javaagent:${env.BYTEMAN_HOME}/lib/byteman.jar=listener:true,boot:${env.BYTEMAN_HOME}/lib/byteman.jar
             </property>
+            <property name="managementPort">10990</property>
             <property name="outputToConsole">true</property>
         </configuration>
     </container>

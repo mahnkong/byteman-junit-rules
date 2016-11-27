@@ -1,4 +1,4 @@
-package org.mahnkong.testutils.byteman;
+package com.github.mahnkong.testutils.byteman;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -63,8 +63,8 @@ public class BytemanRuleSubmitterTest {
         verify(bytemanRuleSubmitter, times(2)).execute(argument.capture(), anyBoolean());
 
         List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ /test/myClassRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u /test/myClassRule.btm$"));
+        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myClassRule.btm$"));
+        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u .test.myClassRule.btm$"));
     }
 
     @Test
@@ -92,11 +92,11 @@ public class BytemanRuleSubmitterTest {
         verify(bytemanRuleSubmitter, times(4)).execute(argument.capture(), anyBoolean());
 
         List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ /test/myClassRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ /test/myMethodRule.btm$"));
+        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myClassRule.btm$"));
+        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ .test.myMethodRule.btm$"));
 
-        assertTrue(capturedArgs.get(2).matches(".*bmsubmit\\.\\w+ -u /test/myMethodRule.btm$"));
-        assertTrue(capturedArgs.get(3).matches(".*bmsubmit\\.\\w+ -u /test/myClassRule.btm$"));
+        assertTrue(capturedArgs.get(2).matches(".*bmsubmit\\.\\w+ -u .test.myMethodRule.btm$"));
+        assertTrue(capturedArgs.get(3).matches(".*bmsubmit\\.\\w+ -u .test.myClassRule.btm$"));
     }
 
     @Test
@@ -128,8 +128,8 @@ public class BytemanRuleSubmitterTest {
         verify(bytemanRuleSubmitter, times(2)).execute(argument.capture(), anyBoolean());
 
         List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ /test/myMethodRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u /test/myMethodRule.btm$"));
+        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myMethodRule.btm$"));
+        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u .test.myMethodRule.btm$"));
 
     }
 
@@ -158,7 +158,7 @@ public class BytemanRuleSubmitterTest {
         verify(bytemanRuleSubmitter, times(2)).execute(argument.capture(), anyBoolean());
 
         List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ /test/myMethodRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u /test/myMethodRule.btm$"));
+        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myMethodRule.btm$"));
+        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u .test.myMethodRule.btm$"));
     }
 }

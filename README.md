@@ -1,6 +1,6 @@
 # byteman-test-utils
 
-This project contains functionality allowing the usage of [byteman](http://byteman.jboss.org/) in JUnit tests for tracing, faultinjection etc by providing [JUnit](http://junit.org/) rules (install byteman agent, load/unload of the rules) and some annotations (byteman setup for the tests). Byteman can also be used in JUnit tests by using the BMUnitRunner class provided by byteman, but this will prevent the usage of other runners (i.e. the [Arquillian](http://arquillian.org/) runner)
+This project contains functionality allowing the usage of [byteman](http://byteman.jboss.org/) in JUnit tests by providing [JUnit](http://junit.org/) rules (install byteman agent, load/unload of the rules) and some annotations (byteman setup for the tests). Byteman can also be used in JUnit tests by using the BMUnitRunner class provided by byteman, but this will prevent the usage of other runners (i.e. the [Arquillian](http://arquillian.org/) runner)
 
 The project requires byteman to be installed on the machine where the tests are executed. The path to byteman can be set as environment variable (BYTEMAN_HOME), so the rules will find it without specifying any parameter. Additionally, the path to byteman can also be specified when creating the rule objects.
 

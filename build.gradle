@@ -1,0 +1,133 @@
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+repositories {
+    jcenter()
+}
+
+ext {
+    junitVersion = '4.12'
+    hemcrestVersion = '1.3'
+    ejb32ApiSpecVersion = '1.0.0.Final'
+    arquillianJunitContainerVersion = '1.1.11.Final'
+    arquillianWildflyContainerVersion = '2.0.0.Final'
+    mockitoVersion = '1.9.5'
+    bytemanVersion = '3.0.6'
+    wildflyVersion = '10.1.0.Final'
+    scmUrl = 'https://github.com/mahnkong/byteman-junit-rules'
+    projectDescription = 'This project contains functionality allowing the usage of byteman in JUnit tests by providing JUnit rules (install byteman agent, load/unload of the rules) and some annotations (byteman setup for the tests).'
+}
+
+configurations {
+    byteman
+    wildfly
+}
+
+dependencies {
+    compile ("junit:junit:${junitVersion}") {
+        exclude group: 'org.hamcrest'
+    }
+    testCompile "org.hamcrest:hamcrest-core:${hemcrestVersion}"
+    testCompile "org.jboss.spec.javax.ejb:jboss-ejb-api_3.2_spec:${ejb32ApiSpecVersion}"
+    testCompile "org.jboss.arquillian.junit:arquillian-junit-container:${arquillianJunitContainerVersion}"
+    testCompile "org.wildfly.arquillian:wildfly-arquillian-container-managed:${arquillianWildflyContainerVersion}"
+    testCompile "org.mockito:mockito-all:${mockitoVersion}"
+    byteman "org.jboss.byteman:byteman-download:${bytemanVersion}:bin@zip"
+    wildfly "org.wildfly:wildfly-dist:${wildflyVersion}@zip"
+}
+
+task prepareByteman(type: Copy) {
+    from zipTree (configurations.byteman.files.first())
+    into buildDir
+}
+
+task prepareWildfly(type: Copy) {
+    onlyIf {
+        ! file("${buildDir}${File.separator}wildfly-${wildflyVersion}").isDirectory()
+    }
+    from zipTree (configurations.wildfly.files.first())
+    into buildDir
+}
+
+test {
+    dependsOn("prepareByteman", "prepareWildfly")
+    environment 'BYTEMAN_HOME', "${buildDir}${File.separator}byteman-download-${bytemanVersion}"
+    forkEvery 1
+}
+
+jar {
+    from "LICENSE"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        artifacts(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml {
+                asNode().appendNode('name', project.name)
+                asNode().appendNode('description', project.ext.projectDescription)
+                asNode().appendNode('url', project.ext.scmUrl)
+                asNode().appendNode('scm').
+                        appendNode('url', project.ext.scmUrl).parent().
+                        appendNode('connection', "scm:git:${project.ext.scmUrl}.git")
+                asNode().appendNode('licenses').appendNode('license').
+                        appendNode('name', 'Apache License, Version 2.0').parent().
+                        appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.html')
+                asNode().appendNode('developers').appendNode('developer').
+                        appendNode('id', 'mahnkong')
+            }
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+// https://github.com/bintray/gradle-bintray-plugin
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+
+    publications = ['artifacts']
+    pkg {
+        repo = "maven"
+        // it is the name that appears in bintray when logged
+        name = project.name
+        websiteUrl = project.ext.scmUrl
+        vcsUrl = project.ext.scmUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+        version {
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = System.getenv("BINTRAY_GPG_PASSWORD") //Optional. The passphrase for GPG signing'
+            }
+            mavenCentralSync {
+                sync = true //Optional (true by default). Determines whether to sync the version to Maven Central.
+                user = System.getenv("BINTRAY_USER") //OSS user token
+                password = System.getenv("BINTRAY_OSS_PASSWORD") //OSS user password
+            }
+        }
+    }
+}
+
+bintrayUpload.dependsOn('test')

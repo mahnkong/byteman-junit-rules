@@ -1,4 +1,4 @@
-package org.mahnkong.testutils.byteman.it;
+package com.github.mahnkong.testutils.byteman.it;
 
 import javax.ejb.Stateless;
 

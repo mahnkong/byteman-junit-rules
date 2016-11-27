@@ -1,20 +1,20 @@
-package org.mahnkong.testutils.byteman.it;
+package com.github.mahnkong.testutils.byteman.it;
 
+import com.github.mahnkong.testutils.byteman.BytemanAgentInstaller;
+import com.github.mahnkong.testutils.byteman.BytemanRuleFile;
+import com.github.mahnkong.testutils.byteman.BytemanRuleSubmitter;
+import com.github.mahnkong.testutils.byteman.IgnoreBytemanClassRuleFile;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mahnkong.testutils.byteman.BytemanAgentInstaller;
-import org.mahnkong.testutils.byteman.BytemanRuleFile;
-import org.mahnkong.testutils.byteman.BytemanRuleSubmitter;
-import org.mahnkong.testutils.byteman.IgnoreBytemanClassRuleFile;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  * Created by mahnkong on 03.05.15.
  */
-@BytemanRuleFile(filepath = "target/test-classes/testUppercaseSayHello.btm")
+@BytemanRuleFile(filepath = "build/resources/test/testUppercaseSayHello.btm")
 public class BytemanTestUtilsIT {
 
     private SimpleBean simpleBean;
@@ -43,7 +43,7 @@ public class BytemanTestUtilsIT {
 
     @Test
     @IgnoreBytemanClassRuleFile
-    @BytemanRuleFile(filepath = "target/test-classes/testSayHello.btm")
+    @BytemanRuleFile(filepath = "build/resources/test/testSayHello.btm")
     public void testSayHelloByteman() {
         assertEquals("Moin!", simpleBean.sayHello());
     }

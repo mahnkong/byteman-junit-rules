@@ -11,6 +11,7 @@ import java.lang.management.RuntimeMXBean;
  */
 public class BytemanAgentInstaller extends AbstractBytemanTestRule {
 
+    private boolean installIntoBootstrapClasspath;
     private boolean verbose;
     private boolean transformAll;
     private RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
@@ -19,13 +20,14 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
     private BytemanAgentInstaller(Builder builder) {
         super(builder.bytemanHome);
         this.verbose = builder.verbose;
+        this.installIntoBootstrapClasspath = builder.installIntoBootstrapClasspath;
         this.transformAll = builder.transformAll;
     }
 
     private void installAgent() throws Exception {
         String jvmName = bean.getName();
         long pid = Long.valueOf(jvmName.split("@")[0]);
-        execute(bminstall + (transformAll ? " -Dorg.jboss.byteman.transform.all" : "") +  " -Dorg.jboss.byteman.home=" + getBytemanHome() + " " + pid, verbose);
+        execute(bminstall + (installIntoBootstrapClasspath ? " -b" : "") + (transformAll ? " -Dorg.jboss.byteman.transform.all" : "") +  " -Dorg.jboss.byteman.home=" + getBytemanHome() + " " + pid, verbose);
     }
 
     public Statement apply(final Statement statement, Description description) {
@@ -45,11 +47,13 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
     public static class Builder {
         private String bytemanHome;
         private boolean verbose;
+        private boolean installIntoBootstrapClasspath;
         private boolean transformAll;
 
         public Builder() {
             this.bytemanHome = System.getenv("BYTEMAN_HOME");
             this.verbose = false;
+            this.installIntoBootstrapClasspath = false;
             this.transformAll = false;
         }
 
@@ -65,6 +69,11 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
 
         public Builder verbose(final boolean verbose) {
             this.verbose = verbose;
+            return this;
+        }
+
+        public Builder installIntoBootstrapClasspath(final boolean installIntoBootstrapClasspath) {
+            this.installIntoBootstrapClasspath = installIntoBootstrapClasspath;
             return this;
         }
 

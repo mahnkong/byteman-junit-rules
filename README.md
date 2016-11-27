@@ -1,4 +1,5 @@
 ![Travis build status](https://api.travis-ci.org/mahnkong/byteman-junit-rules.svg?branch=develop)
+[ ![Download](https://api.bintray.com/packages/mahnkong/maven/byteman-junit-rules/images/download.svg) ](https://bintray.com/mahnkong/maven/byteman-junit-rules/_latestVersion)
 # byteman-test-utils
 
 This project contains functionality allowing the usage of [byteman](http://byteman.jboss.org/) in JUnit tests by providing [JUnit](http://junit.org/) rules (install byteman agent, load/unload of the rules) and some annotations (byteman setup for the tests). Byteman can also be used in JUnit tests by using the BMUnitRunner class provided by byteman, but this will prevent the usage of other runners (i.e. the [Arquillian](http://arquillian.org/) runner)
@@ -13,6 +14,7 @@ The builder allows the setting of the following options:
 
 * bytemanHome: specifies the path to byteman
 * verbose: adds verbosity for the agent installation
+* installIntoBootstrapClasspath: installs the byteman agent into the bootstrap classpath (bmsubmit -b)
 * transformAll: sets the "-Dorg.jboss.byteman.transform.all" property when installing the agent (see byteman docs for more details)
 
 Example definition inside a test case:

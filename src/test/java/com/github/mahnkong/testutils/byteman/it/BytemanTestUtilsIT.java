@@ -20,7 +20,7 @@ public class BytemanTestUtilsIT {
     private SimpleBean simpleBean;
 
     @ClassRule
-    public static BytemanAgentInstaller bytemanAgentInstaller = new BytemanAgentInstaller.Builder().build();
+    public static BytemanAgentInstaller bytemanAgentInstaller = new BytemanAgentInstaller.Builder().transformAll(true).installIntoBootstrapClasspath(true).build();
 
     @Rule
     public BytemanRuleSubmitter bytemanRuleSubmitter = new BytemanRuleSubmitter.Builder().build();
@@ -46,5 +46,12 @@ public class BytemanTestUtilsIT {
     @BytemanRuleFile(filepath = "build/resources/test/testSayHello.btm")
     public void testSayHelloByteman() {
         assertEquals("Moin!", simpleBean.sayHello());
+    }
+
+    @Test
+    @IgnoreBytemanClassRuleFile
+    @BytemanRuleFile(filepath = "build/resources/test/modifySystemClass.btm")
+    public void testModifySystemClass() {
+        assertEquals("OK", System.getenv("BYTEMAN_TEST"));
     }
 }

@@ -36,6 +36,44 @@ public class BytemanAgentInstallerTest {
     }
 
     @Test
+    public void testAgentInstallCommandCreationInstallIntoBoostrapClasspathActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().installIntoBootstrapClasspath(true).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString(" -b"));
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationInstallIntoBoostrapClasspathNotActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().installIntoBootstrapClasspath(false).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), not(containsString(" -b")));
+    }
+
+    @Test
     public void testAgentInstallCommandCreationTransformAllActive() throws Throwable {
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
         BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().transformAll(true).build());

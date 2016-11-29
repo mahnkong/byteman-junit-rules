@@ -11,14 +11,19 @@ import java.io.InputStreamReader;
  */
 public abstract class AbstractBytemanTestRule implements TestRule {
     private String bytemanHome;
+    String bindAddress;
+    int bindPort;
+
     private Runtime runtime = Runtime.getRuntime();
 
     private boolean isWindows = false;
     protected String bmsubmit = "";
     protected String bminstall = "";
 
-    public AbstractBytemanTestRule(String bytemanHome) {
+    public AbstractBytemanTestRule(String bytemanHome, String bindAddress, int bindPort) {
         this.bytemanHome = bytemanHome;
+        this.bindAddress = bindAddress;
+        this.bindPort = bindPort;
 
         if (System.getProperty ("os.name").toLowerCase().contains("windows")) {
             isWindows = true;
@@ -40,7 +45,7 @@ public abstract class AbstractBytemanTestRule implements TestRule {
 
             String line;
             while ((line = reader.readLine())!= null) {
-                System.err.println(line);
+                System.out.println(line);
             }
         }
 

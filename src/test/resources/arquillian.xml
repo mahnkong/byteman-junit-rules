@@ -8,7 +8,7 @@
         <configuration>
             <property name="jbossHome">build/wildfly-10.1.0.Final</property>
             <property name="javaVmArguments">
-                -Djboss.socket.binding.port-offset=1000 -Dbyteman.home=${env.BYTEMAN_HOME} -Dorg.jboss.byteman.transform.all -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true -javaagent:${env.BYTEMAN_HOME}/lib/byteman.jar=listener:true,boot:${env.BYTEMAN_HOME}/lib/byteman.jar
+                -Djboss.socket.binding.port-offset=1000 -Dbyteman.home=${env.BYTEMAN_HOME} -Dorg.jboss.byteman.transform.all -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true -javaagent:${env.BYTEMAN_HOME}/lib/byteman.jar=listener:true,sys:${env.BYTEMAN_HOME}/lib/byteman-submit.jar,boot:${env.BYTEMAN_HOME}/lib/byteman.jar
             </property>
             <property name="managementPort">10990</property>
             <property name="outputToConsole">true</property>

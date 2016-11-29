@@ -1,5 +1,6 @@
 plugins {
     id "com.jfrog.bintray" version "1.7.3"
+    id 'net.researchgate.release' version '2.4.0'
 }
 
 apply plugin: 'java'
@@ -32,6 +33,8 @@ dependencies {
     compile ("junit:junit:${junitVersion}") {
         exclude group: 'org.hamcrest'
     }
+    compile "org.jboss.byteman:byteman-submit:${bytemanVersion}"
+
     testCompile "org.hamcrest:hamcrest-core:${hemcrestVersion}"
     testCompile "org.jboss.spec.javax.ejb:jboss-ejb-api_3.2_spec:${ejb32ApiSpecVersion}"
     testCompile "org.jboss.arquillian.junit:arquillian-junit-container:${arquillianJunitContainerVersion}"
@@ -72,6 +75,14 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+}
+
+release {
+    tagTemplate = 'v${version}'
+
+    git {
+        requireBranch = /master|release.*/
+    }
 }
 
 publishing {

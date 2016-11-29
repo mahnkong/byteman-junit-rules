@@ -1,21 +1,19 @@
 package com.github.mahnkong.testutils.byteman;
 
+import org.jboss.byteman.agent.submit.Submit;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
@@ -24,6 +22,9 @@ import static org.mockito.Mockito.*;
 public class BytemanRuleSubmitterTest {
     @Mock
     Runtime runtime;
+
+    @Mock
+    Submit submit;
 
     @InjectMocks
     private BytemanRuleSubmitter bytemanRuleSubmitter = spy(new BytemanRuleSubmitter.Builder().build());
@@ -44,8 +45,6 @@ public class BytemanRuleSubmitterTest {
 
     @Test
     public void testStatementExecutionBytemanRuleFileClassAnnotation() throws Throwable {
-        doNothing().when(bytemanRuleSubmitter).execute(anyString(), anyBoolean());
-
         final List<String> list = new ArrayList();
         Statement statement = new Statement() {
             @Override
@@ -59,18 +58,12 @@ public class BytemanRuleSubmitterTest {
         bytemanRuleSubmitter.apply(statement, description).evaluate();
         assertEquals(1, list.size());
 
-        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(bytemanRuleSubmitter, times(2)).execute(argument.capture(), anyBoolean());
-
-        List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myClassRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u .test.myClassRule.btm$"));
+        verify(submit, times(1)).addRulesFromFiles(Arrays.asList("/test/myClassRule.btm"));
+        verify(submit, times(1)).deleteRulesFromFiles(Arrays.asList("/test/myClassRule.btm"));
     }
 
     @Test
     public void testStatementExecutionBytemanRuleFileClassAndMethodAnnotation() throws Throwable {
-        doNothing().when(bytemanRuleSubmitter).execute(anyString(), anyBoolean());
-
         BytemanRuleFile bytemanRuleFile = mock(BytemanRuleFile.class);
         when(bytemanRuleFile.filepath()).thenReturn("/test/myMethodRule.btm");
 
@@ -88,21 +81,14 @@ public class BytemanRuleSubmitterTest {
         bytemanRuleSubmitter.apply(statement, description).evaluate();
         assertEquals(1, list.size());
 
-        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(bytemanRuleSubmitter, times(4)).execute(argument.capture(), anyBoolean());
-
-        List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myClassRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ .test.myMethodRule.btm$"));
-
-        assertTrue(capturedArgs.get(2).matches(".*bmsubmit\\.\\w+ -u .test.myMethodRule.btm$"));
-        assertTrue(capturedArgs.get(3).matches(".*bmsubmit\\.\\w+ -u .test.myClassRule.btm$"));
+        verify(submit, times(1)).addRulesFromFiles(Arrays.asList("/test/myMethodRule.btm"));
+        verify(submit, times(1)).deleteRulesFromFiles(Arrays.asList("/test/myMethodRule.btm"));
+        verify(submit, times(1)).addRulesFromFiles(Arrays.asList("/test/myClassRule.btm"));
+        verify(submit, times(1)).deleteRulesFromFiles(Arrays.asList("/test/myClassRule.btm"));
     }
 
     @Test
     public void testStatementExecutionBytemanRuleFileClassAndMethodAnnotationIgnoreClass() throws Throwable {
-        doNothing().when(bytemanRuleSubmitter).execute(anyString(), anyBoolean());
-
         BytemanRuleFile bytemanRuleFile = mock(BytemanRuleFile.class);
         IgnoreBytemanClassRuleFile ignoreBytemanClassRuleFile = mock(IgnoreBytemanClassRuleFile.class);
         when(bytemanRuleFile.filepath()).thenReturn("/test/myMethodRule.btm");
@@ -124,19 +110,15 @@ public class BytemanRuleSubmitterTest {
         bytemanRuleSubmitter.apply(statement, description).evaluate();
         assertEquals(1, list.size());
 
-        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(bytemanRuleSubmitter, times(2)).execute(argument.capture(), anyBoolean());
-
-        List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myMethodRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u .test.myMethodRule.btm$"));
+        verify(submit, times(1)).addRulesFromFiles(Arrays.asList("/test/myMethodRule.btm"));
+        verify(submit, times(1)).deleteRulesFromFiles(Arrays.asList("/test/myMethodRule.btm"));
+        verify(submit, times(0)).addRulesFromFiles(Arrays.asList("/test/myClassRule.btm"));
+        verify(submit, times(0)).deleteRulesFromFiles(Arrays.asList("/test/myClassRule.btm"));
 
     }
 
     @Test
     public void testStatementExecutionBytemanRuleFileMethodAnnotation() throws Throwable {
-        doNothing().when(bytemanRuleSubmitter).execute(anyString(), anyBoolean());
-
         BytemanRuleFile bytemanRuleFile = mock(BytemanRuleFile.class);
         when(bytemanRuleFile.filepath()).thenReturn("/test/myMethodRule.btm");
 
@@ -154,11 +136,7 @@ public class BytemanRuleSubmitterTest {
         bytemanRuleSubmitter.apply(statement, description).evaluate();
         assertEquals(1, list.size());
 
-        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
-        verify(bytemanRuleSubmitter, times(2)).execute(argument.capture(), anyBoolean());
-
-        List<String> capturedArgs = argument.getAllValues();
-        assertTrue(capturedArgs.get(0).matches(".*bmsubmit\\.\\w+ .test.myMethodRule.btm$"));
-        assertTrue(capturedArgs.get(1).matches(".*bmsubmit\\.\\w+ -u .test.myMethodRule.btm$"));
+        verify(submit, times(1)).addRulesFromFiles(Arrays.asList("/test/myMethodRule.btm"));
+        verify(submit, times(1)).deleteRulesFromFiles(Arrays.asList("/test/myMethodRule.btm"));
     }
 }

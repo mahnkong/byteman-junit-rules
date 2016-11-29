@@ -36,6 +36,122 @@ public class BytemanAgentInstallerTest {
     }
 
     @Test
+    public void testAgentInstallCommandBindAddressSet() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().bindAddress("myhost").build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString(" -h myhost"));
+    }
+
+    @Test
+    public void testAgentInstallCommandBindAddressNotSet() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), not(containsString(" -h myhost")));
+        assertThat(argument.getValue(), containsString(" -h localhost"));
+    }
+
+    @Test
+    public void testAgentInstallCommandBindPortSet() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().bindPort(12345).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString(" -p 12345"));
+    }
+
+    @Test
+    public void testAgentInstallCommandBindPortNotSet() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), not(containsString(" -p 12345")));
+        assertThat(argument.getValue(), containsString(" -p 9091"));
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationAccessAllAreasActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().accessAllAreas(true).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString(" -s"));
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationAccessAllAreasNotActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().accessAllAreas(false).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), not(containsString(" -s")));
+    }
+
+    @Test
     public void testAgentInstallCommandCreationInstallIntoBoostrapClasspathActive() throws Throwable {
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
         BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().installIntoBootstrapClasspath(true).build());

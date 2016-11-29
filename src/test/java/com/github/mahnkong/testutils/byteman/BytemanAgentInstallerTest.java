@@ -228,6 +228,82 @@ public class BytemanAgentInstallerTest {
     }
 
     @Test
+    public void testAgentInstallCommandCreationVerboseActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().verbose(true).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString("-Dorg.jboss.byteman.verbose"));
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationVerboseNotActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), not(containsString("-Dorg.jboss.byteman.verbose")));
+    }
+
+     @Test
+    public void testAgentInstallCommandCreationDebugActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().debug(true).build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), containsString("-Dorg.jboss.byteman.debug"));
+    }
+
+    @Test
+    public void testAgentInstallCommandCreationDebugNotActive() throws Throwable {
+        ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
+        BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().build());
+        doNothing().when(b1).execute(anyString(), anyBoolean());
+
+        Statement statement = new Statement() {
+            @Override
+            public void evaluate() throws Throwable {
+            }
+        };
+        Description description = mock(Description.class);
+
+        b1.apply(statement, description).evaluate();
+
+        verify(b1).execute(argument.capture(), anyBoolean());
+        assertThat(argument.getValue(), not(containsString("-Dorg.jboss.byteman.debug")));
+    }
+
+    @Test
     public void testAgentInstallCommandCreationBytemanHome() throws Throwable {
         BytemanAgentInstaller b1 = spy(new BytemanAgentInstaller.Builder().bytemanHome("/test_bytemanhome").build());
         doNothing().when(b1).execute(anyString(), anyBoolean());

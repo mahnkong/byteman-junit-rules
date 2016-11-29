@@ -21,7 +21,8 @@ The builder allows the setting of the following options:
 * bytemanHome: specifies the path to byteman
 * bindAddress: address that the listener binds itself to (default = localhost)
 * bindPort: port that the listener binds itself to (default = 9091)
-* verbose: adds verbosity for the agent installation
+* verbose: adds verbosity option to the agent installation (-Dorg.jboss.byteman.verbose)
+* verbose: adds debug option the agent installation (-Dorg.jboss.byteman.debug)
 * installIntoBootstrapClasspath: installs the byteman agent into the bootstrap classpath (bminstall -b)
 * accessAllAreas: sets an access-all-areas security policy for the byteman rules (bminstall -s)
 * transformAll: sets the "-Dorg.jboss.byteman.transform.all" property when installing the agent (see byteman docs for more details)
@@ -65,7 +66,6 @@ public class MyTest {
 This annotation can be applied to classes and methods and specifies the rules to be loaded into the byteman agent before executing the test. Currently there exist 2 options to the annotation:
 
 * filepath: mandatory, specifies where to find the rule file (can be relative to the project directory)
-* verbose: optional, if active all byteman gets executed in verbose mode
 
 Rules configured on class level are loaded before **each** test and unloaded afterwards. Rules configured on method level are loaded only before the test they are annotated to and unloaded after test execution. If the test class and the test method are both annotated with BytemanRuleFile, first the class rules are loaded and afterwards the method rules. Then again the test gets executed and afterwards the method rules are unloaded before the class rules. 
 
@@ -76,7 +76,7 @@ Example definition inside a test case (the rules here are stored inside *src/tes
 public class MyTest {
 
   @Test
-  @BytemanRuleFile(filepath = "target/test-classes/mymethodrule.btm", verbose = true)
+  @BytemanRuleFile(filepath = "target/test-classes/mymethodrule.btm")
   public void myTestMethod() {
     //the test
   }
@@ -93,7 +93,7 @@ Example definition inside a test case:
 public class MyTest {
 
   @Test
-  @BytemanRuleFile(filepath = "target/test-classes/mymethodrule.btm", verbose = true)
+  @BytemanRuleFile(filepath = "target/test-classes/mymethodrule.btm")
   @IgnoreBytemanClassRuleFile
   public void myTestMethod() {
     //the test

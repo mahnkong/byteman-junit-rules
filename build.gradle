@@ -77,6 +77,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+release {
+    tagTemplate = 'v${version}'
+
+    git {
+        requireBranch =~ /master|release/
+    }
+}
+
 publishing {
     publications {
         artifacts(MavenPublication) {

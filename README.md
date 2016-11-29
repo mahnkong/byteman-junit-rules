@@ -6,6 +6,12 @@ This project contains functionality allowing the usage of [byteman](http://bytem
 
 The project requires byteman to be installed on the machine where the tests are executed. The path to byteman can be set as environment variable (BYTEMAN_HOME), so the rules will find it without specifying any parameter. Additionally, the path to byteman can also be specified when creating the rule objects.
 
+The versions used developing (and testing) this project where:
+
+ * Junit: 4.12
+ * Byteman: 3.0.6
+ 
+
 ## BytemanAgentInstaller
 
 This rule installs the byteman agent into the JVM of the test. **This rule must be annotated as ClassRule, so that the agent gets installed only once into the JVM!**
@@ -13,8 +19,11 @@ This rule installs the byteman agent into the JVM of the test. **This rule must 
 The builder allows the setting of the following options:
 
 * bytemanHome: specifies the path to byteman
+* bindAddress: address that the listener binds itself to (default = localhost)
+* bindPort: port that the listener binds itself to (default = 9091)
 * verbose: adds verbosity for the agent installation
-* installIntoBootstrapClasspath: installs the byteman agent into the bootstrap classpath (bmsubmit -b)
+* installIntoBootstrapClasspath: installs the byteman agent into the bootstrap classpath (bminstall -b)
+* accessAllAreas: sets an access-all-areas security policy for the byteman rules (bminstall -s)
 * transformAll: sets the "-Dorg.jboss.byteman.transform.all" property when installing the agent (see byteman docs for more details)
 
 Example definition inside a test case:

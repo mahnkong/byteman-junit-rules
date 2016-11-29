@@ -6,7 +6,7 @@ This project contains functionality allowing the usage of [byteman](http://bytem
 
 The project requires byteman to be installed on the machine where the tests are executed. The path to byteman can be set as environment variable (BYTEMAN_HOME), so the rules will find it without specifying any parameter. Additionally, the path to byteman can also be specified when creating the rule objects.
 
-The versions used developing (and testing) this project where:
+The versions used developing (and testing) this project were:
 
  * Junit: 4.12
  * Byteman: 3.0.6

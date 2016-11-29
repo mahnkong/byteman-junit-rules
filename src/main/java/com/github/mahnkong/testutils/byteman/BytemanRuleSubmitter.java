@@ -49,19 +49,13 @@ public class BytemanRuleSubmitter extends AbstractBytemanTestRule {
 
     private void submitBytemanRule(final BytemanRuleFile bytemanRuleFile) throws Exception {
         if (bytemanRuleFile != null) {
-            String result = submit.addRulesFromFiles(Arrays.asList(bytemanRuleFile.filepath()));
-            if (bytemanRuleFile.verbose()) {
-                System.out.println("Rule submitting of file '" + bytemanRuleFile.filepath() + "' returned: " + result);
-            }
+            submit.addRulesFromFiles(Arrays.asList(bytemanRuleFile.filepath()));
         }
     }
 
     private void removeBytemanRule(final BytemanRuleFile bytemanRuleFile) throws Exception {
         if (bytemanRuleFile != null) {
-            String result = submit.deleteRulesFromFiles(Arrays.asList(bytemanRuleFile.filepath()));
-            if (bytemanRuleFile.verbose()) {
-                System.out.println("Rule deletion of file '" + bytemanRuleFile.filepath() + "' returned: " + result);
-            }
+            submit.deleteRulesFromFiles(Arrays.asList(bytemanRuleFile.filepath()));
         }
     }
 

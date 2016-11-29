@@ -13,6 +13,7 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
 
     private boolean installIntoBootstrapClasspath;
     private boolean verbose;
+    private boolean debug;
     private boolean transformAll;
     private boolean accessAllAreas;
     private RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
@@ -22,6 +23,7 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
         super(builder.bytemanHome, builder.bindAddress, builder.bindPort);
 
         this.verbose = builder.verbose;
+        this.debug = builder.debug;
         this.installIntoBootstrapClasspath = builder.installIntoBootstrapClasspath;
         this.accessAllAreas = builder.accessAllAreas;
         this.transformAll = builder.transformAll;
@@ -37,6 +39,8 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
                 + (accessAllAreas ? " -s" : "")
                 + (transformAll ? " -Dorg.jboss.byteman.transform.all" : "")
                 +  " -Dorg.jboss.byteman.home=" + getBytemanHome()
+                + (verbose ? " -Dorg.jboss.byteman.verbose=true" : "")
+                + (debug ? "-Dorg.jboss.byteman.debug=true" : "")
                 + " " + pid, verbose);
     }
 
@@ -62,12 +66,14 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
         private boolean installIntoBootstrapClasspath;
         private boolean accessAllAreas;
         private boolean transformAll;
+        private boolean debug;
 
         public Builder() {
             this.bytemanHome = System.getenv("BYTEMAN_HOME");
             this.bindAddress = "localhost";
             this.bindPort = 9091;
             this.verbose = false;
+            this.debug = false;
             this.installIntoBootstrapClasspath = false;
             this.transformAll = false;
             this.accessAllAreas = false;
@@ -100,6 +106,11 @@ public class BytemanAgentInstaller extends AbstractBytemanTestRule {
 
         public Builder verbose(final boolean verbose) {
             this.verbose = verbose;
+            return this;
+        }
+
+        public Builder debug(final boolean debug) {
+            this.debug = debug;
             return this;
         }
 
